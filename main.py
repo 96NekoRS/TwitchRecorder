@@ -64,8 +64,8 @@ def convert_to_mp4(channel_name):
     shutil.move(f'temp/{channel_name}.txt', f'channels/{channel_name}/streams/{timestamp}.txt')
 
 
-def record_chat(channel_name, output_file, oauth_token):
-    subscription = twitch.Chat(channel=f'#{channel_name}', nickname='KuroNekoRS',
+def record_chat(channel_name, output_file, oauth_token, nickname):
+    subscription = twitch.Chat(channel=f'#{channel_name}', nickname=nickname,
                                oauth=oauth_token, helix=helix).subscribe(
         observer=lambda message: write_message_to_file(message, output_file))
     return subscription
@@ -164,7 +164,7 @@ async def run_flask_app():
 
 
 @jit(parallel=True, forceobj=True)
-def main(client_id, client_secret, oauth_token):
+def main(client_id, client_secret, oauth_token, nickname):
     run_flask_app()
     oauth = get_app_access_token(client_id, client_secret)
 
@@ -177,7 +177,8 @@ def main(client_id, client_secret, oauth_token):
 
                 record_stream(channel_name["name"], f'temp/{channel_name["name"]}.ts')
                 recording[channel_name["name"]] = record_chat(channel_name["name"],
-                                                              f'temp/{channel_name["name"]}.txt', oauth_token)
+                                                              f'temp/{channel_name["name"]}.txt',
+                                                              oauth_token, nickname=nickname)
             elif channel_name["name"] in recording and not is_live:
                 print(f'{channel_name["name"]} is offline.')
                 live.remove(channel_name["name"])
@@ -202,6 +203,7 @@ def start():
         client_id = config["twitch"]["client_id"]
         client_secret = config["twitch"]["client_secret"]
         oauth_token = config["twitch"]["oauth_token"]
+        nickname = config["twitch"]["nickname"]
 
         database_name = config["mongodb"]["database_name"]
         collection_name = config["mongodb"]["collection_name"]
