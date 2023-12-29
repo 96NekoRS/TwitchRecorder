@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{name}}</title>
+</head>
+<body>
+    <ul>
+        {% for file in files: %}
+        <li><a href="/channels/{{name}}/streams/{{file}}"><h2>{{file}}</h2></a></li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>

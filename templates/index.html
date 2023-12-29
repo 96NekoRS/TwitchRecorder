@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    .image-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+
+    .image-card {
+      margin: 10px;
+      text-align: center;
+    }
+
+    .image-card img {
+      width: 300px;
+      height: 300px;
+    }
+  </style>
+
+  <body>
+    <h1>Channels</h1>
+
+    <div class="image-grid">
+      {% for channel in channels: %}
+      <div class="image-card">
+        <h2>{{ channel["name"] }}</h2>
+        <a href="/channels/{{ channel['name'] }}">
+          <img src="/channels/{{ channel['name'] }}/profile.png" alt="{{ channel['name'] }}" width="300" height="300">
+        </a>
+        <button onclick="window.location.href='/delete_channel?channel_name={{ channel['name'] }}'">Delete</button>
+      </div>
+      {% endfor %}
+    </div>
+
+    <h2>Add Channel</h2>
+
+    <form action="/add_channel" method="post">
+      <label for="channel_name">Channel Name:</label><br>
+      <input type="text" id="channel_name" name="channel_name"><br>
+      <input type="submit" value="Submit">
+    </form>
+  </body>
+</html>
